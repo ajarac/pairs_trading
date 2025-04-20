@@ -8,7 +8,3 @@ def fetch_sp500_list() -> pd.DataFrame:
     dataframe = dataframe[['Symbol', 'Security', 'GICS Sector', 'GICS Sub-Industry']]
     dataframe.columns = ['symbol', 'name', 'sector', 'industry']
     return dataframe
-
-if __name__ == "__main__":
-    df = fetch_sp500_list()
-    print(df.head())
