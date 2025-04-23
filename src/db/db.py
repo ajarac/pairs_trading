@@ -4,10 +4,12 @@ from sqlalchemy.orm import sessionmaker
 
 from src.db.models import Base
 
-engine = create_engine("sqlite:///../../pairs_trading.db", echo=True)  # echo=True to log SQL queries
-SessionLocal = sessionmaker(bind=engine)
 
+class DBConnection:
+    def __init__(self):
+        self.engine = create_engine("sqlite:///../../pairs_trading.db", echo=True)  # echo=True to log SQL queries
+        Base.metadata.create_all(bind=self.engine)
 
-# Create the tables
-def init_db():
-    Base.metadata.create_all(bind=engine)
+    def session(self):
+        maker = sessionmaker(bind=self.engine)
+        return maker()
