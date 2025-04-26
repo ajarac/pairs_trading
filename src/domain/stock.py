@@ -2,13 +2,13 @@ from dataclasses import dataclass
 
 @dataclass
 class Stock:
-    symbol: str
+    ticker: str
     name: str
     sector: str
     industry: str
 
     def __init__(self, symbol: str, name: str, sector: str, industry: str):
-        self.symbol = symbol
+        self.ticker = symbol
         self.name = name
         self.sector = sector
         self.industry = industry

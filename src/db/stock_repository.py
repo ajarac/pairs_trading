@@ -19,4 +19,4 @@ class StockRepository:
     def fetch_by_sector(self, sector: str) -> List[Stock]:
         query_session = self.connection.session()
         stock_sql_alchemy_list = query_session.query(StockSqlAlchemy).where(StockSqlAlchemy.sector == sector)
-        return [Stock(s.symbol, s.name, s.sector, s.industry) for s in stock_sql_alchemy_list]
+        return [Stock(s.ticker, s.name, s.sector, s.industry) for s in stock_sql_alchemy_list]

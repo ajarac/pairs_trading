@@ -1,7 +1,7 @@
-# db/models.py
-from sqlalchemy import Column, String, Date, Float, Integer
+from sqlalchemy import Column, String, Date, Float, Integer, Boolean
 from sqlalchemy.orm import declarative_base
 
+from src.domain.cointegration import Cointegration
 from src.domain.historical_price import HistoricalPrice
 from src.domain.stock import Stock
 
@@ -11,7 +11,7 @@ Base = declarative_base()
 class StockSqlAlchemy(Base):
     __tablename__ = 'Stock'
 
-    symbol = Column(String, primary_key=True)
+    ticker = Column(String, primary_key=True)
     name = Column(String)
     sector = Column(String, index=True)
     industry = Column(String)
@@ -19,14 +19,14 @@ class StockSqlAlchemy(Base):
     @staticmethod
     def from_domain(stock: Stock):
         return StockSqlAlchemy(
-            symbol=stock.symbol,
+            ticker=stock.ticker,
             name=stock.name,
             sector=stock.sector,
             industry=stock.industry
         )
 
     def __repr__(self):
-        return f"<Stock(symbol='{self.symbol}', name={self.name}, sector={self.sector})>"
+        return f"<Stock(ticker='{self.ticker}', name={self.name}, sector={self.sector})>"
 
 
 class HistoricalPriceSqlAlchemy(Base):
@@ -54,4 +54,22 @@ class HistoricalPriceSqlAlchemy(Base):
             low=historical_price.low,
             close=historical_price.close,
             volume=historical_price.volume
+        )
+
+
+class CointegrationSqlAlchemy(Base):
+    __tablename__ = 'cointegration'
+
+    ticker1 = Column(String, primary_key=True)
+    ticker2 = Column(String, primary_key=True)
+    cointegrated = Column(Boolean)
+    value = Column(Float)
+
+    @staticmethod
+    def from_domain(cointegration: Cointegration):
+        return CointegrationSqlAlchemy(
+            ticker1=cointegration.ticker1,
+            ticker2=cointegration.ticker2,
+            cointegrated=cointegration.cointegrated,
+            value=cointegration.value
         )

@@ -16,5 +16,5 @@ if __name__ == '__main__':
         print(f"{len(assets)} assets in sector {sector}")
         for asset in assets:
             print(f"starting loading historical data for {asset}")
-            historical_prices = load_history_data(asset.symbol)
+            historical_prices = load_history_data(asset.ticker)
             historical_repository.save(historical_prices)
