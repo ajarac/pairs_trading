@@ -5,30 +5,39 @@ from statsmodels.tsa.stattools import adfuller
 import pandas as pd
 from typing import Tuple
 
+from src.domain.candlestick import Candlestick
+
 
 @dataclass
 class Cointegration:
     ticker1: str
     ticker2: str
     cointegrated: bool
-    value: float
+    p_value: float
+    hedge_ratio: float
     sector: str
 
     def __init__(self, ticker1: str, ticker2: str, cointegrated: bool, value: float, sector: str):
         self.ticker1 = ticker1
         self.ticker2 = ticker2
         self.cointegrated = cointegrated
-        self.value = value
+        self.p_value = value
         self.sector = sector
 
-def estimate_hedge_ratio(y: pd.Series, x: pd.Series) -> float:
-    x_with_const = sm.add_constant(x)
-    model = sm.OLS(y, x_with_const).fit()
-    return model.params[x.name]
+    def test_cointegration(self, y: pd.Series, x: pd.Series) -> Tuple[bool, float]:
+        self.hedge_ratio = self.estimate_hedge_ratio(y, x)
+        spread = y - self.hedge_ratio * x
+        adf_result = adfuller(spread.dropna())
+        p_value = adf_result[1]
+        return p_value < 0.05, p_value
 
-def test_cointegration(y: pd.Series, x: pd.Series) -> Tuple[bool, float]:
-    hedge_ratio = estimate_hedge_ratio(y, x)
-    spread = y - hedge_ratio * x
-    adf_result = adfuller(spread.dropna())
-    p_value = adf_result[1]
-    return p_value < 0.05, p_value
+    def calculate_spread(self, candlestick1: Candlestick, candlestick2: Candlestick):
+        y = candlestick1.close if candlestick1.ticker == self.ticker1 else candlestick2.close
+        x = candlestick2.close if candlestick2.ticker == self.ticker2 else candlestick1.close
+        return y - self.hedge_ratio * x
+
+    @staticmethod
+    def estimate_hedge_ratio(y: pd.Series, x: pd.Series) -> float:
+        x_with_const = sm.add_constant(x)
+        model = sm.OLS(y, x_with_const).fit()
+        return model.params[x.name]

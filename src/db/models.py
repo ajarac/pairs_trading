@@ -72,6 +72,6 @@ class CointegrationSqlAlchemy(Base):
             ticker1=cointegration.ticker1,
             ticker2=cointegration.ticker2,
             cointegrated=cointegration.cointegrated,
-            value=cointegration.value,
+            value=cointegration.p_value,
             sector=cointegration.sector
         )
