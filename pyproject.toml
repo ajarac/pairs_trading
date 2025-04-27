@@ -17,7 +17,9 @@ dependencies = [
     "yfinance (>=0.2.55,<0.3.0)",
     "jupyter (>=1.1.1,<2.0.0)",
     "ipykernel (>=6.29.5,<7.0.0)",
-    "sqlalchemy (>=2.0.40,<3.0.0)"
+    "sqlalchemy (>=2.0.40,<3.0.0)",
+    "alpaca-py (>=0.39.4,<0.40.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
 ]
 
 [tool.poetry]
@@ -27,3 +29,6 @@ packages = [{include = "pairs_trading", from = "src"}]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.13,<4.0"

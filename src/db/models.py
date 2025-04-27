@@ -64,6 +64,7 @@ class CointegrationSqlAlchemy(Base):
     ticker2 = Column(String, primary_key=True)
     cointegrated = Column(Boolean)
     value = Column(Float)
+    sector = Column(String, index=True)
 
     @staticmethod
     def from_domain(cointegration: Cointegration):
@@ -71,5 +72,6 @@ class CointegrationSqlAlchemy(Base):
             ticker1=cointegration.ticker1,
             ticker2=cointegration.ticker2,
             cointegrated=cointegration.cointegrated,
-            value=cointegration.value
+            value=cointegration.value,
+            sector=cointegration.sector
         )

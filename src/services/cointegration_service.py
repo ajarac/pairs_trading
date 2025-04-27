@@ -68,7 +68,8 @@ class CointegrationService:
                     stock_1.ticker,
                     stock_2.ticker,
                     cointegrated,
-                    p_value
+                    p_value,
+                    sector
                 )
                 print(f"Calculated {cointegration}")
                 self.cointegration_repository.save(cointegration)

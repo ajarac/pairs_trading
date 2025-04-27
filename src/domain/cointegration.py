@@ -12,12 +12,14 @@ class Cointegration:
     ticker2: str
     cointegrated: bool
     value: float
+    sector: str
 
-    def __init__(self, ticker1: str, ticker2: str, cointegrated: bool, value: float):
+    def __init__(self, ticker1: str, ticker2: str, cointegrated: bool, value: float, sector: str):
         self.ticker1 = ticker1
         self.ticker2 = ticker2
         self.cointegrated = cointegrated
         self.value = value
+        self.sector = sector
 
 def estimate_hedge_ratio(y: pd.Series, x: pd.Series) -> float:
     x_with_const = sm.add_constant(x)
