@@ -63,7 +63,8 @@ class CointegrationSqlAlchemy(Base):
     ticker1 = Column(String, primary_key=True)
     ticker2 = Column(String, primary_key=True)
     cointegrated = Column(Boolean)
-    value = Column(Float)
+    p_value = Column(Float, index=True)
+    hedge_ratio = Column(Float)
     sector = Column(String, index=True)
 
     @staticmethod
@@ -72,6 +73,7 @@ class CointegrationSqlAlchemy(Base):
             ticker1=cointegration.ticker1,
             ticker2=cointegration.ticker2,
             cointegrated=cointegration.cointegrated,
-            value=cointegration.p_value,
+            p_value=cointegration.p_value,
+            hedge_ratio=cointegration.hedge_ratio,
             sector=cointegration.sector
         )

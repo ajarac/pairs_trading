@@ -17,19 +17,19 @@ class Cointegration:
     hedge_ratio: float
     sector: str
 
-    def __init__(self, ticker1: str, ticker2: str, cointegrated: bool, value: float, sector: str):
+    def __init__(self, ticker1: str, ticker2: str, sector: str):
         self.ticker1 = ticker1
         self.ticker2 = ticker2
-        self.cointegrated = cointegrated
-        self.p_value = value
+        self.cointegrated = False
+        self.p_value = 0
         self.sector = sector
 
-    def test_cointegration(self, y: pd.Series, x: pd.Series) -> Tuple[bool, float]:
+    def test_cointegration(self, y: pd.Series, x: pd.Series):
         self.hedge_ratio = self.estimate_hedge_ratio(y, x)
         spread = y - self.hedge_ratio * x
         adf_result = adfuller(spread.dropna())
-        p_value = adf_result[1]
-        return p_value < 0.05, p_value
+        self.p_value = adf_result[1]
+        self.cointegrated = self.p_value < 0.05
 
     def calculate_spread(self, candlestick1: Candlestick, candlestick2: Candlestick):
         y = candlestick1.close if candlestick1.ticker == self.ticker1 else candlestick2.close

@@ -5,7 +5,7 @@ import pandas as pd
 from src.db.cointegration_repository import CointegrationRepository
 from src.db.historical_price_repository import HistoricalPriceRepository
 from src.db.stock_repository import StockRepository
-from src.domain.cointegration import test_cointegration, Cointegration
+from src.domain.cointegration import Cointegration
 
 
 class CointegrationService:
@@ -57,20 +57,17 @@ class CointegrationService:
                 series_1_aligned, series_2_aligned = self.align_series(series_1, series_2)
 
                 # 4. Test cointegration
+                cointegration = Cointegration(
+                    stock_1.ticker,
+                    stock_2.ticker,
+                    sector
+                )
                 try:
-                    cointegrated, p_value = test_cointegration(series_1_aligned, series_2_aligned)
+                    cointegration.test_cointegration(series_1_aligned, series_2_aligned)
                 except Exception as e:
                     print(f"Error calculating cointegration for {ticker_1} and {ticker_2}: {e}")
                     continue
 
-                # 5. Save result
-                cointegration = Cointegration(
-                    stock_1.ticker,
-                    stock_2.ticker,
-                    cointegrated,
-                    p_value,
-                    sector
-                )
                 print(f"Calculated {cointegration}")
                 self.cointegration_repository.save(cointegration)
 
