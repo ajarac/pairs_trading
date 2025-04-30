@@ -18,8 +18,8 @@ class Cointegration:
     sector: str
 
     def __init__(self, ticker1: str, ticker2: str, sector: str):
-        self.ticker1 = ticker1
-        self.ticker2 = ticker2
+        self.ticker1 = min(ticker1, ticker2)
+        self.ticker2 = max(ticker1, ticker2)
         self.cointegrated = False
         self.p_value = 0
         self.sector = sector
@@ -35,6 +35,9 @@ class Cointegration:
         y = candlestick1.close if candlestick1.ticker == self.ticker1 else candlestick2.close
         x = candlestick2.close if candlestick2.ticker == self.ticker2 else candlestick1.close
         return y - self.hedge_ratio * x
+
+    def get_key(self):
+        return f"{self.ticker1}-{self.ticker2}"
 
     @staticmethod
     def estimate_hedge_ratio(y: pd.Series, x: pd.Series) -> float:

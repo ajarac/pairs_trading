@@ -25,7 +25,6 @@ class CointegrationStrategy:
 
     def subscribe_pair(self, cointegration):
         self.cointegration_pairs[cointegration.ticker1] = cointegration
-        self.cointegration_pairs[cointegration.ticker2] = cointegration
         pair_key = self._pair_key(cointegration.ticker1, cointegration.ticker2)
         self.zscore_trackers[pair_key] = ZScoreTracker(window_size=100)
         self.alpaca_provider.add_to_subscribe(self.handle_bar,
@@ -34,6 +33,8 @@ class CointegrationStrategy:
     async def handle_bar(self, candlestick: Candlestick):
         print(f"{candlestick.ticker} - close price: {candlestick.close}")
         self.last_candlestick[candlestick.ticker] = candlestick
+        if candlestick.ticker not in self.cointegration_pairs:
+            return
         cointegration = self.cointegration_pairs[candlestick.ticker]
         symbol_pair = cointegration.ticker1 if cointegration.ticker2 == candlestick.ticker else cointegration.ticker2
         if symbol_pair not in self.last_candlestick:
@@ -42,16 +43,19 @@ class CointegrationStrategy:
         candlestick_pair = self.last_candlestick[symbol_pair]
 
         spread = cointegration.calculate_spread(candlestick, candlestick_pair)
-        pair_key = self._pair_key(cointegration.ticker1, cointegration.ticker2)
-        z_tracker = self.zscore_trackers[pair_key]
-
+        z_tracker = self.zscore_trackers[cointegration.get_key()]
+        if not z_tracker.is_ready():
+            return
         z_score = z_tracker.update(spread)
+
         pair_stats = PairStats(
             ticker1=cointegration.ticker1,
             ticker2=cointegration.ticker2,
+            price1=self.last_candlestick[cointegration.ticker1].close,
+            price2=self.last_candlestick[cointegration.ticker2].close,
             spread=spread,
             z_score=z_score,
-            datetime=candlestick.timestamp
+            dt=candlestick.timestamp
         )
         print(f"pair stats: {pair_stats}")
         self.pair_stats_repository.save(pair_stats)

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Float, Integer, Boolean
+from sqlalchemy import Column, String, Date, Float, Integer, Boolean, DateTime
 from sqlalchemy.orm import declarative_base
 
 from src.domain.cointegration import Cointegration
@@ -83,17 +83,22 @@ class CointegrationSqlAlchemy(Base):
 class PairStatsSqlAlchemy(Base):
     __tablename__ = 'pair_stats'
 
-    ticker1 = Column(String, primary_key=True)
-    ticker2 = Column(String, primary_key=True)
+    id = Column(String, primary_key=True)
+    ticker1 = Column(String)
+    ticker2 = Column(String)
+    price1 = Column(Float)
+    price2 = Column(Float)
     spread = Column(Float)
     z_score = Column(Float)
-    datetime = Column(Date)
+    datetime = Column(DateTime)
 
     @staticmethod
     def from_domain(pairStats: PairStats):
         return PairStatsSqlAlchemy(
             ticker1=pairStats.ticker1,
             ticker2=pairStats.ticker2,
+            price1=pairStats.price1,
+            price2=pairStats.price2,
             spread=pairStats.spread,
             z_score=pairStats.z_score,
             datetime=pairStats.datetime

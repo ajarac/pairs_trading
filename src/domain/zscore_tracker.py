@@ -1,6 +1,7 @@
 class ZScoreTracker:
     def __init__(self, window_size: int = 100):
         self.window_size = window_size
+        self.min_required_size = int(window_size * 0.3)
         self.spreads = []
 
     def update(self, spread: float) -> float:
@@ -11,7 +12,7 @@ class ZScoreTracker:
         if len(self.spreads) > self.window_size:
             self.spreads.pop(0)
 
-        if len(self.spreads) < 30:  # Require minimum samples
+        if not self.is_ready():  # Require minimum samples
             return 0.0
 
         mean_spread = sum(self.spreads) / len(self.spreads)
@@ -22,3 +23,6 @@ class ZScoreTracker:
 
         z_score = (spread - mean_spread) / std_spread
         return z_score
+
+    def is_ready(self):
+        return len(self.spreads) < self.min_required_size
