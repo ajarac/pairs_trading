@@ -13,6 +13,7 @@ class AlpacaProvider:
 
     def add_to_subscribe(self, on_bar: Callable, assets: List[str]) -> None:
         async def wrap(bar: Bar):
+            print(f"bar {bar}")
             candlestick = Candlestick(
                 ticker=bar.symbol,
                 open=bar.open,
@@ -22,7 +23,7 @@ class AlpacaProvider:
                 volume=bar.volume,
                 timestamp=bar.timestamp
             )
-            on_bar(candlestick)
+            await on_bar(candlestick)
 
         self.data_stream.subscribe_bars(wrap, *assets)
         print(f"subscribed to {assets}")

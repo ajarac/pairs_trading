@@ -1,5 +1,6 @@
 # db/setup.py
 import logging
+from typing import List
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,3 +17,13 @@ class DBConnection:
     def session(self):
         maker = sessionmaker(bind=self.engine)
         return maker()
+
+    def save(self, value: Base):
+        save_session = self.session()
+        save_session.add(value)
+        save_session.commit()
+
+    def bulk_save(self, values: List[Base]):
+        save_session = self.session()
+        save_session.bulk_save_objects(values)
+        save_session.commit()

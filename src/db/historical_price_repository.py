@@ -13,11 +13,9 @@ class HistoricalPriceRepository:
         self.connection = connection
 
     def save(self, historical_prices: List[HistoricalPrice]):
-        save_session = self.connection.session()
         to_save_list = [HistoricalPriceSqlAlchemy.from_domain(historical_price) for historical_price in
                         historical_prices]
-        save_session.bulk_save_objects(to_save_list)
-        save_session.commit()
+        self.connection.bulk_save(to_save_list)
 
     def get_all(self) -> DataFrame:
         query = '''SELECT * FROM historical_prices;'''

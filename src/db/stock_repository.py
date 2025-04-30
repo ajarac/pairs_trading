@@ -11,10 +11,7 @@ class StockRepository:
         self.connection = connection
 
     def save(self, stock: Stock):
-        save_session = self.connection.session()
-        stock_sql_alchemy = StockSqlAlchemy.from_domain(stock)
-        save_session.add(stock_sql_alchemy)
-        save_session.commit()
+        self.connection.save(StockSqlAlchemy.from_domain(stock))
 
     def fetch_by_sector(self, sector: str) -> List[Stock]:
         query_session = self.connection.session()

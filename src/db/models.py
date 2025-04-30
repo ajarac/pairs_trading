@@ -3,6 +3,7 @@ from sqlalchemy.orm import declarative_base
 
 from src.domain.cointegration import Cointegration
 from src.domain.historical_price import HistoricalPrice
+from src.domain.pair_stats import PairStats
 from src.domain.stock import Stock
 
 Base = declarative_base()
@@ -76,4 +77,24 @@ class CointegrationSqlAlchemy(Base):
             p_value=cointegration.p_value,
             hedge_ratio=cointegration.hedge_ratio,
             sector=cointegration.sector
+        )
+
+
+class PairStatsSqlAlchemy(Base):
+    __tablename__ = 'pair_stats'
+
+    ticker1 = Column(String, primary_key=True)
+    ticker2 = Column(String, primary_key=True)
+    spread = Column(Float)
+    z_score = Column(Float)
+    datetime = Column(Date)
+
+    @staticmethod
+    def from_domain(pairStats: PairStats):
+        return PairStatsSqlAlchemy(
+            ticker1=pairStats.ticker1,
+            ticker2=pairStats.ticker2,
+            spread=pairStats.spread,
+            z_score=pairStats.z_score,
+            datetime=pairStats.datetime
         )
