@@ -1,6 +1,6 @@
-import datetime
 from dataclasses import dataclass
-from typing import Literal, Optional
+from datetime import datetime
+from typing import Optional
 
 from src.domain.direction import Direction
 
@@ -23,6 +23,9 @@ class PairPosition:
     @property
     def pair_key(self):
         return f"{min(self.ticker1, self.ticker2)}-{max(self.ticker1, self.ticker2)}"
+
+    def get_key(self):
+        return f"{self.pair_key}-{datetime}-{datetime.timestamp(self.entry_time)}"
 
     def is_closed(self) -> bool:
         return self.exit_time is not None

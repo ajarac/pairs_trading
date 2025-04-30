@@ -4,14 +4,16 @@ from src.db.pair_stats_repository import PairStatsRepository
 from src.domain.candlestick import Candlestick
 from src.domain.pair_stats import PairStats
 from src.domain.zscore_tracker import ZScoreTracker
+from src.services.position_manager import PositionManager
 
 
 class CointegrationStrategy:
     def __init__(self, cointegration_repository: CointegrationRepository, alpaca_provider: AlpacaProvider,
-                 pair_stats_repository: PairStatsRepository):
+                 pair_stats_repository: PairStatsRepository, position_manager: PositionManager):
         self.alpaca_provider = alpaca_provider
         self.cointegration_repository = cointegration_repository
         self.pair_stats_repository = pair_stats_repository
+        self.position_manager = position_manager
         self.last_candlestick = {}
         self.cointegration_pairs = {}
         self.zscore_trackers = {}
@@ -59,6 +61,7 @@ class CointegrationStrategy:
         )
         print(f"pair stats: {pair_stats}")
         self.pair_stats_repository.save(pair_stats)
+        self.position_manager.process_signal(pair_stats)
 
     @staticmethod
     def _pair_key(ticker1: str, ticker2: str) -> str:
