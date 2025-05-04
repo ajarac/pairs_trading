@@ -2,7 +2,7 @@
 import logging
 from typing import List
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 
 from src.db.models import Base
@@ -27,3 +27,8 @@ class DBConnection:
         save_session = self.session()
         save_session.bulk_save_objects(values)
         save_session.commit()
+
+    def update(self, value: Base):
+
+        update(value)
+

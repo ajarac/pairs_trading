@@ -1,13 +1,14 @@
 import datetime
 from typing import Dict, List, Literal
 
+from src.db.pair_position_repository import PairPositionRepository
 from src.domain.direction import Direction
 from src.domain.pair_position import PairPosition
 from src.domain.pair_stats import PairStats
 
 
 class PositionManager:
-    def __init__(self, position_repository):
+    def __init__(self, position_repository: PairPositionRepository):
         self.positions: Dict[str, PairPosition] = {}  # active positions by pair_key
         self.position_repository = position_repository
 
@@ -40,6 +41,7 @@ class PositionManager:
         )
         self.positions[position.pair_key] = position
         print(f"[OPEN] {direction} {position.pair_key} @ {stats.datetime}, z={stats.z_score:.2f}")
+        self.position_repository.save(position)
 
     def _close(self, position: PairPosition, stats: PairStats):
         position.exit_time = stats.datetime
