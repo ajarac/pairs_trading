@@ -68,6 +68,8 @@ class CointegrationSqlAlchemy(Base):
     p_value = Column(Float, index=True)
     hedge_ratio = Column(Float)
     sector = Column(String, index=True)
+    regression_y = Column(String, nullable=True)
+    regression_x = Column(String, nullable=True)
 
     @staticmethod
     def from_domain(cointegration: Cointegration):
@@ -77,7 +79,9 @@ class CointegrationSqlAlchemy(Base):
             cointegrated=cointegration.cointegrated,
             p_value=cointegration.p_value,
             hedge_ratio=cointegration.hedge_ratio,
-            sector=cointegration.sector
+            sector=cointegration.sector,
+            regression_x=cointegration.regression_x,
+            regression_y=cointegration.regression_y
         )
 
 

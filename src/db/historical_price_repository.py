@@ -20,3 +20,7 @@ class HistoricalPriceRepository:
     def get_all(self) -> DataFrame:
         query = '''SELECT * FROM historical_prices;'''
         return pd.read_sql_query(query, con=self.connection.engine)
+
+    def get_by_ticker(self, ticker: str):
+        query = '''SELECT * FROM historical_prices WHERE ticker = :ticker ORDER BY date;'''
+        return pd.read_sql_query(query, con=self.connection.engine, params={"ticker": ticker})
