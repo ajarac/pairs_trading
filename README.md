@@ -8,6 +8,7 @@ It includes:
 - Historical price loading via `yfinance`
 - Z-Score based signal generation
 - Live price subscription using **Alpaca API**
+- Backtesting using historical price
 - In-memory **PositionManager** for simulation
 - Clean architecture with repositories, domain models, and services
 
@@ -33,7 +34,7 @@ src/
 ### 1. Clone the project and install dependencies
 
 ```bash
-git clone https://github.com/your-username/pairs-trading.git
+git clone https://github.com/ajarac/pairs-trading.git
 cd pairs-trading
 poetry install
 ```
@@ -56,22 +57,27 @@ ALPACA_API_SECRET=your_secret
 ## ⚙️ How to Run
 
 Load SP500 symbols
-```
+```shell
 poetry run python src/scripts/load_assets.py
 ```
 Download historical OHLCV data
-```
+```shell
 poetry run python src/scripts/load_historical_price.py
 ```
 
 Calculate cointegration pairs
-```
+```shell
 poetry run python src/scripts/calculate_cointegration.py
 ```
 
 Start live signal tracking
-```
+```shell
 poetry run python src/scripts/live_signals.py
+```
+
+Start backtesting
+```shell
+poetry run python src/scripts/backtesting.py
 ```
 
 ## 📌 Tech Stack
@@ -82,7 +88,6 @@ poetry run python src/scripts/live_signals.py
 - SQLite for local storage
 
 ## 📈 Future Enhancements
-- Backtesting engine
 - Real order execution layer
 - Trade analytics & dashboard
 - Portfolio-level risk management
