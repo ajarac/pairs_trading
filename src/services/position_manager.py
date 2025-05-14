@@ -13,7 +13,7 @@ class PositionManager:
         self.position_repository = position_repository
 
     def process_signal(self, stats: PairStats):
-        current_position = self.positions.get(stats.get_key())
+        current_position = self.positions.get(stats.get_pair_key())
 
         # OPENING
         if current_position is None:
@@ -51,7 +51,7 @@ class PositionManager:
         del self.positions[position.pair_key]
 
         # Persist to repository
-        self.position_repository.save(position)
+        self.position_repository.update(position)
 
         print(f"[CLOSE] {position.direction} {position.pair_key} @ {stats.datetime}, z={stats.z_score:.2f}")
 
