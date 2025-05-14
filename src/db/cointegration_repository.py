@@ -20,7 +20,7 @@ class CointegrationRepository:
                                                      hedge_ratio,
                                                      p_value,
                                                      regression_x,
-                                                     regression_y
+                                                     regression_y,
                                                      ROW_NUMBER() OVER (PARTITION BY sector ORDER BY p_value ASC) as rank
                                               FROM cointegration
                                               WHERE cointegrated = 1)

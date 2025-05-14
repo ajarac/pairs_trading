@@ -9,7 +9,8 @@ class PairPositionRepository:
         self.connection = connection
 
     def save(self, pair_position: PairPosition):
-        self.connection.save(PairPositionSqlAlchemy.from_domain(pair_position))
+        domain = PairPositionSqlAlchemy.from_domain(pair_position)
+        self.connection.save(domain)
 
     def update(self, pair_position: PairPosition):
         self.connection.update(PairPositionSqlAlchemy.from_domain(pair_position))

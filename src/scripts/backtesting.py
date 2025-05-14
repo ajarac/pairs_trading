@@ -14,3 +14,4 @@ if __name__ == '__main__':
     position_manager = PositionManager(pair_position_repository)
 
     backtesting_service = BacktestingService(historical_price_repository, cointegration_repository, position_manager)
+    backtesting_service.run()

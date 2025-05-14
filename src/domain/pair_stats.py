@@ -25,3 +25,6 @@ class PairStats:
 
     def get_key(self):
         return f"{self.ticker1}-{self.ticker2}-{datetime.timestamp(self.datetime)}"
+
+    def get_pair_key(self):
+        return f"{self.ticker1}-{self.ticker2}"

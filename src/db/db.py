@@ -29,6 +29,5 @@ class DBConnection:
         save_session.commit()
 
     def update(self, value: Base):
-
         update(value)
 

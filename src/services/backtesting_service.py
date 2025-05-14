@@ -2,6 +2,7 @@ from src.db.cointegration_repository import CointegrationRepository
 from src.db.historical_price_repository import HistoricalPriceRepository
 from src.domain.cointegration import Cointegration
 from src.domain.pair_stats import PairStats
+from src.domain.zscore_tracker import ZScoreTracker
 from src.services.position_manager import PositionManager
 
 
@@ -23,15 +24,17 @@ class BacktestingService:
         df1 = self.historical_repo.get_by_ticker(cointegration.ticker1)
         df2 = self.historical_repo.get_by_ticker(cointegration.ticker2)
         merged = df1.merge(df2, on="date", suffixes=("_1", "_2"))
-
+        zscore_tracker = ZScoreTracker(window_size=100)
         for _, row in merged.iterrows():
+            spread = cointegration.calculate_spread_from_prices(row["close_1"], row["close_2"])
+            z_score = zscore_tracker.update(spread)
             stats = PairStats(
                 ticker1=cointegration.ticker1,
                 ticker2=cointegration.ticker2,
                 price1=row["close_1"],
                 price2=row["close_2"],
-                spread=cointegration.calculate_spread(row["close_1"], row["close_2"]),
-                z_score=...,  # update from a ZScoreTracker
+                spread=spread,
+                z_score=z_score,  # update from a ZScoreTracker
                 dt=row["date"]
             )
             self.position_manager.process_signal(stats)
